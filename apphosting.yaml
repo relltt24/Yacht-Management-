@@ -11,4 +11,4 @@ runtime:
     # Add other runtime envs in the Studio UI (do NOT put secrets here in source)
     # STRIPE_KEY: "pk_test_xxx"
 build:
-  command: "npm --prefix ./functions run build"
+  command: "npm run build"
