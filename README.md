@@ -42,8 +42,25 @@ npm start
 
 The server will start on port 8080. Visit http://localhost:8080 to see available endpoints.
 
+### Test the API
+
+Run the comprehensive test suite:
+
+```bash
+./test-api.sh http://localhost:8080
+```
+
+Or test a deployed instance:
+
+```bash
+./test-api.sh https://your-firebase-app.web.app
+```
+
 ### Deploy to Firebase
 
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+Quick deploy:
 ```bash
 firebase deploy
 ```
@@ -66,7 +83,10 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for complete API reference in
 ├── apphosting.yaml        # App hosting runtime configuration
 ├── Index.html             # Landing page
 ├── API_DOCUMENTATION.md   # Complete API reference
-└── README.md             # This file
+├── DEPLOYMENT.md          # Deployment guide
+├── SECURITY.md            # Security best practices
+├── test-api.sh            # API testing script
+└── README.md              # This file
 ```
 
 ## Environment Variables
