@@ -70,8 +70,18 @@ app.get("/api", (req, res) => {
   });
 });
 
-// Serve static files (for API_DOCUMENTATION.md, etc.)
-app.use(express.static(__dirname));
+// Serve specific documentation files
+app.get("/API_DOCUMENTATION.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "API_DOCUMENTATION.md"));
+});
+
+app.get("/DEPLOYMENT.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "DEPLOYMENT.md"));
+});
+
+app.get("/SECURITY.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "SECURITY.md"));
+});
 
 // Root endpoint - serve the HTML frontend
 app.get("/", (req, res) => {
