@@ -1,5 +1,11 @@
 # AI Yacht Management System
 
+[![Backend Status](https://img.shields.io/badge/backend-ready-brightgreen)](https://github.com/relltt24/Yacht-Management-)
+[![Deploy Status](https://img.shields.io/badge/deploy-firebase-orange)](https://firebase.google.com/)
+[![Node.js](https://img.shields.io/badge/node.js-20-green)](https://nodejs.org/)
+
+**✅ Backend is built and ready to deploy!**
+
 A comprehensive backend system for managing yacht fleets, crew, maintenance, bookings, and inventory with AI-ready analytics endpoints.
 
 ## Features
@@ -58,12 +64,23 @@ Or test a deployed instance:
 
 ### Deploy to Firebase
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
-
-Quick deploy:
+**Quick Start**: Use the automated deployment script:
 ```bash
+./deploy.sh
+```
+
+**Or deploy manually**:
+```bash
+npm install
+cd functions && npm install && cd ..
+firebase login
+firebase use studio-4010754397
 firebase deploy
 ```
+
+**Documentation**:
+- [FIREBASE_DEPLOY.md](./FIREBASE_DEPLOY.md) - Quick start guide (5 minutes)
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Comprehensive deployment documentation
 
 ## API Documentation
 
