@@ -12,6 +12,8 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 const app = express();
+// Note: Using permissive CORS for development/emulator.
+// In production, restrict to specific domains via environment config.
 app.use(cors({ origin: true }));
 app.use(express.json());
 
