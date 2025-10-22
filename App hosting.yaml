@@ -1,0 +1,6 @@
+runtime:
+  language: nodejs
+  version: 20
+service:
+  healthCheck:
+    path: /healthz
