@@ -1,69 +1,58 @@
-# AI Yacht Management System
+# Yacht Management API
 
-A comprehensive backend system for managing yacht fleets, crew, maintenance, bookings, and inventory with AI-ready analytics endpoints.
+This branch adds a minimal, stable Firebase backend scaffold:
 
-## Features
+- Cloud Functions (Express) in `functions/`
+- Firestore security rules (`firestore.rules`)
+- Hosting configuration in `firebase.json`
+- Firebase Studio config in `apphosting.yaml`
+- GitHub Actions workflow to run tests and deploy to Firebase (requires a repo secret)
+- Test suite (jest + supertest) for basic endpoints
 
-### Core Management
-- **Yacht Management**: Complete CRUD operations for yacht fleet
-- **Crew Management**: Assign and track crew members across vessels
-- **Maintenance Scheduling**: Track and schedule maintenance tasks
-- **Booking System**: Manage yacht charters and reservations
-- **Inventory Tracking**: Monitor supplies and equipment across all yachts
+**Important**: No secrets are committed. You must add the service account secret to GitHub secrets.
 
-### AI-Ready Analytics
-- **Fleet Overview**: Real-time fleet statistics and utilization
-- **Maintenance Insights**: Predictive maintenance data
-- **Booking Analytics**: Revenue optimization metrics
-- **Crew Utilization**: Staffing optimization data
-- **Inventory Status**: Supply chain analytics
-- **Comprehensive Dashboard**: Unified view for AI processing
+## Quick setup (developer machine)
 
-## Tech Stack
+1. Install Node 18 (`nvm use 18` recommended).
+2. Install Firebase CLI:
+   ```bash
+   npm install -g firebase-tools
+   ```
+3. Install repo dependencies:
+   ```bash
+   npm ci
+   cd functions && npm ci
+   ```
 
-- **Runtime**: Node.js 20
-- **Framework**: Express.js
-- **Deployment**: Firebase App Hosting
-- **API**: RESTful JSON API with CORS support
+## Add required secret to GitHub repository (required for CI deploy)
 
-## Quick Start
+1. Create a Firebase service account:
+   - Firebase Console → Project Settings → Service accounts → Generate new private key.
+2. Copy the JSON content (DO NOT commit the JSON file to the repo).
+3. Add the JSON content as a GitHub Actions secret:
+   - Repo → Settings → Secrets and variables → Actions → New repository secret
+   - Name: `FIREBASE_SERVICE_ACCOUNT`
+   - Value: paste the full JSON
 
-### Installation
+## Local development with emulator
 
+Start Firestore & Functions emulator:
 ```bash
-npm install
+firebase emulators:start --only functions,firestore
 ```
 
-### Run Locally
-
+Run tests:
 ```bash
-npm start
+npm --prefix ./functions run test
 ```
 
-The server will start on port 8080. Visit http://localhost:8080 to see available endpoints.
+## Deploying
 
-### Test the API
-
-Run the comprehensive test suite:
-
-```bash
-./test-api.sh http://localhost:8080
-```
-
-Or test a deployed instance:
-
-```bash
-./test-api.sh https://your-firebase-app.web.app
-```
-
-### Deploy to Firebase
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
-
-Quick deploy:
-```bash
-firebase deploy
-```
+- **CI**: the GitHub Actions workflow will run on push to main and deploy using the `FIREBASE_SERVICE_ACCOUNT` secret.
+- **Manual**: ensure your firebase CLI is authenticated and run:
+  ```bash
+  firebase deploy --only hosting,functions --project yachtmanagement
+  ```
 
 ## API Documentation
 
