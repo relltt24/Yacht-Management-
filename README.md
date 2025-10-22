@@ -1,13 +1,24 @@
-# Yacht Management System - Firebase Backend
+# AI Yacht Management System - Firebase Backend
 
-This branch adds a minimal, stable Firebase backend scaffold:
+A comprehensive RESTful API backend for managing yacht fleets with AI-ready analytics.
 
-- Cloud Functions (Express) in `functions/`
-- Firestore security rules (`firestore.rules`)
-- Hosting configuration in `firebase.json`
-- Firebase Studio config in `apphosting.yaml`
-- GitHub Actions workflow to run tests and deploy to Firebase (requires a repo secret)
-- Test suite (jest + supertest) for basic endpoints
+## Features
+
+- **Complete CRUD API**: Full yacht, crew, maintenance, booking, and inventory management
+- **AI Analytics Endpoints**: Pre-aggregated data for ML/AI applications
+- **Firebase Cloud Functions**: Serverless deployment with automatic scaling
+- **Dual Route Support**: Works with both `/api/*` and root paths for flexibility
+- **In-Memory Storage**: Quick development and testing (easily replaced with Firestore)
+- **Comprehensive Tests**: Jest + Supertest test suite with 12+ tests
+- **GitHub Actions CI/CD**: Automated testing and deployment
+
+## Architecture
+
+- **Cloud Functions** (Express) in `functions/` - Full API implementation
+- **Static Hosting** in `public/` - Landing page and frontend assets
+- **Firebase Hosting** configuration with smart routing
+- **Firestore Rules** for future database integration
+- **GitHub Actions** workflow for automated deployment
 
 **Important:** No secrets are committed. You must add the service account secret to GitHub secrets.
 
@@ -68,9 +79,37 @@ After merging this PR:
 
 See `scripts/migrate_stub.md` for the safe approach to migrate existing Firestore data to the new structure.
 
+## API Endpoints
+
+The API is accessible at `/api/*` when deployed to Firebase. All endpoints support:
+
+- **Yachts**: `/api/yachts` - Full CRUD operations
+- **Crew**: `/api/crew` - Crew management with certifications
+- **Maintenance**: `/api/maintenance` - Maintenance scheduling and tracking
+- **Bookings**: `/api/bookings` - Charter and reservation management
+- **Inventory**: `/api/inventory` - Supply and equipment tracking
+- **Analytics**: `/api/analytics/*` - AI-ready analytics and insights
+
+See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for complete endpoint documentation.
+
+## Testing
+
+Run the test suite:
+```bash
+cd functions && npm test
+```
+
+All tests verify:
+- Basic functionality (health checks, API info)
+- CRUD operations (yachts, crew, bookings, etc.)
+- Analytics endpoints
+- Dual route support (root and `/api` prefix)
+
 ## Notes
 
-- No secrets are added in this PR.
-- The backend uses Firebase Functions (Express) with Firestore for data persistence.
-- Authentication is stubbed (placeholder middleware) - production will validate JWT tokens.
-- Tests use jest + supertest for basic endpoint validation.
+- No secrets are committed in this repository
+- The backend uses in-memory storage for quick development
+- Authentication is ready for Firebase Auth integration
+- All endpoints support query parameter filtering
+- CORS is configured for cross-origin requests
+- Comprehensive error handling and validation

@@ -130,17 +130,29 @@ apiRouter.get("/yachts/:id", (req, res) => {
 apiRouter.post("/yachts", (req, res) => {
   const { name, type, length, capacity, status } = req.body;
   
+  // Validate required fields and types
   if (!name || !type || !length || !capacity) {
     return errorResponse(res, 400, "Missing required fields: name, type, length, capacity");
   }
   
+  if (typeof name !== 'string' || typeof type !== 'string') {
+    return errorResponse(res, 400, "Invalid field types: name and type must be strings");
+  }
+  
+  const lengthNum = parseInt(length, 10);
+  const capacityNum = parseInt(capacity, 10);
+  
+  if (isNaN(lengthNum) || isNaN(capacityNum)) {
+    return errorResponse(res, 400, "Invalid field types: length and capacity must be numbers");
+  }
+  
   const newYacht = {
     id: Math.max(...yachts.map(y => y.id), 0) + 1,
-    name,
-    type,
-    length,
-    capacity,
-    status: status || "available"
+    name: String(name),
+    type: String(type),
+    length: lengthNum,
+    capacity: capacityNum,
+    status: status ? String(status) : "available"
   };
   
   yachts.push(newYacht);
@@ -154,7 +166,15 @@ apiRouter.put("/yachts/:id", (req, res) => {
     return errorResponse(res, 404, "Yacht not found");
   }
   
-  yachts[index] = { ...yachts[index], ...req.body, id: yachts[index].id };
+  // Validate and sanitize update data
+  const updates = {};
+  if (req.body.name !== undefined) updates.name = String(req.body.name);
+  if (req.body.type !== undefined) updates.type = String(req.body.type);
+  if (req.body.length !== undefined) updates.length = parseInt(req.body.length, 10);
+  if (req.body.capacity !== undefined) updates.capacity = parseInt(req.body.capacity, 10);
+  if (req.body.status !== undefined) updates.status = String(req.body.status);
+  
+  yachts[index] = { ...yachts[index], ...updates, id: yachts[index].id };
   res.json({ success: true, data: yachts[index] });
 });
 
@@ -203,12 +223,16 @@ apiRouter.post("/crew", (req, res) => {
     return errorResponse(res, 400, "Missing required fields: name, position");
   }
   
+  if (typeof name !== 'string' || typeof position !== 'string') {
+    return errorResponse(res, 400, "Invalid field types: name and position must be strings");
+  }
+  
   const newMember = {
     id: Math.max(...crew.map(c => c.id), 0) + 1,
-    name,
-    position,
-    yachtId: yachtId || null,
-    certifications: certifications || []
+    name: String(name),
+    position: String(position),
+    yachtId: yachtId ? parseInt(yachtId, 10) : null,
+    certifications: Array.isArray(certifications) ? certifications.map(c => String(c)) : []
   };
   
   crew.push(newMember);
