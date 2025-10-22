@@ -1,6 +1,11 @@
-runtime:
-  language: nodejs
-  version: 20
-service:
-  healthCheck:
-    path: /healthz
+runConfig:
+  runtime: nodejs20
+  cpu: 1
+  memoryMiB: 512
+  minInstances: 0
+  maxInstances: 10
+  concurrency: 80
+
+env:
+  - variable: NODE_ENV
+    value: production

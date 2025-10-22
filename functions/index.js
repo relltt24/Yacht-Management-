@@ -1,9 +1,14 @@
-const functions = require('firebase-functions');
-const express = require('express');
+import { onRequest } from "firebase-functions/v2/https";
+import express from "express";
+
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello from Firebase Functions!');
+app.get("/", (req, res) => {
+  res.send("Hello from Firebase Functions!");
 });
 
-exports.app = functions.https.onRequest(app);
+app.get("/healthz", (req, res) => {
+  res.send("ok");
+});
+
+export const api = onRequest(app);
