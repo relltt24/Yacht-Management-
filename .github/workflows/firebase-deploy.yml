@@ -1,0 +1,53 @@
+name: CI / Test / Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install root deps
+        run: npm ci
+      - name: Install functions deps
+        run: cd functions && npm ci
+      - name: Run lint (functions)
+        run: npm --prefix ./functions run lint
+      - name: Run tests (functions)
+        run: npm --prefix ./functions run test
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install firebase-tools
+        run: npm install -g firebase-tools@latest
+      - name: Decode service account and set GOOGLE_APPLICATION_CREDENTIALS
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT secret is missing. Aborting deploy."
+            exit 1
+          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "${GITHUB_WORKSPACE}/firebase_service_account.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="${GITHUB_WORKSPACE}/firebase_service_account.json"
+          echo "Service account written and GOOGLE_APPLICATION_CREDENTIALS set."
+      - name: Deploy to Firebase
+        env:
+          PROJECT_ID: "yachtmanagement"
+        run: |
+          firebase deploy --project "$PROJECT_ID" --only hosting,functions
