@@ -1,4 +1,10 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 // Middleware
@@ -48,8 +54,8 @@ const errorResponse = (res, status, message) => {
 // Health check
 app.get("/healthz", (req, res) => res.send("ok"));
 
-// Root endpoint
-app.get("/", (req, res) => {
+// API info endpoint (moved from root)
+app.get("/api", (req, res) => {
   res.json({
     message: "AI Yacht Management Backend API",
     version: "1.0.0",
@@ -62,6 +68,24 @@ app.get("/", (req, res) => {
       analytics: "/api/analytics"
     }
   });
+});
+
+// Serve specific documentation files
+app.get("/API_DOCUMENTATION.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "API_DOCUMENTATION.md"));
+});
+
+app.get("/DEPLOYMENT.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "DEPLOYMENT.md"));
+});
+
+app.get("/SECURITY.md", (req, res) => {
+  res.sendFile(path.join(__dirname, "SECURITY.md"));
+});
+
+// Root endpoint - serve the HTML frontend
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "Index.html"));
 });
 
 // ===== YACHT ENDPOINTS =====

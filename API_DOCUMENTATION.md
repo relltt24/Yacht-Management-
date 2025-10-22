@@ -30,6 +30,9 @@ Error responses:
 ### System
 
 #### GET /
+Serves the HTML frontend interface with interactive documentation and API endpoint links.
+
+#### GET /api
 Get API information and available endpoints
 ```json
 {

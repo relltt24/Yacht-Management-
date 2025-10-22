@@ -53,7 +53,7 @@ test_endpoint() {
 test_endpoint "GET" "/healthz" "Health Check"
 
 # System Info
-test_endpoint "GET" "/" "API Information"
+test_endpoint "GET" "/api" "API Information"
 
 # Yacht Tests
 echo -e "\n${BLUE}=== YACHT MANAGEMENT ===${NC}"
