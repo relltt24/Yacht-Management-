@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 
 # Build outputs
 dist/
@@ -29,4 +28,3 @@ firebase-debug.log
 
 # Functions
 functions/node_modules/
-functions/package-lock.json
