@@ -1,0 +1,203 @@
+{
+  "description": "Firebase backend infrastructure for M/Y Azure Dreams yacht management platform",
+  "topLevelCollection": "vessels",
+  "defaultDocument": "default-vessel",
+  "architecture": {
+    "note": "All application data is stored in subcollections under /vessels/default-vessel"
+  },
+  "entities": {
+    "UserProfile": {
+      "description": "User profile information",
+      "schema": {
+        "id": "string",
+        "email": "string",
+        "displayName": "string",
+        "role": "enum: 'Owner' | 'Captain' | 'Crew' | 'Guest' | 'Vendor'",
+        "photoURL": "string (optional)",
+        "createdAt": "Date",
+        "lastLogin": "Date"
+      }
+    },
+    "ItineraryStop": {
+      "description": "Individual stops in yacht itinerary",
+      "schema": {
+        "id": "string",
+        "location": "string",
+        "arrival": "Date",
+        "departure": "Date",
+        "activities": "string[]",
+        "guests": "string[]",
+        "crew": "string[]",
+        "imageUrl": "string",
+        "imageHint": "string"
+      }
+    },
+    "MaintenanceRecord": {
+      "description": "Maintenance and service records",
+      "schema": {
+        "id": "string",
+        "date": "Date",
+        "service": "string",
+        "vendor": "string",
+        "cost": "number",
+        "status": "enum: 'Completed' | 'In Progress' | 'Scheduled'",
+        "notes": "string",
+        "rating": "number (optional, 1-5)"
+      }
+    },
+    "Expense": {
+      "description": "Financial expense tracking",
+      "schema": {
+        "id": "string",
+        "date": "Date",
+        "category": "enum: 'Fuel' | 'Provisioning' | 'Maintenance' | 'Salaries' | 'Other'",
+        "description": "string",
+        "amount": "number",
+        "status": "enum: 'Approved' | 'Pending' | 'Rejected'",
+        "approver": "string (optional)"
+      }
+    },
+    "DocumentFile": {
+      "description": "Document management system",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "type": "enum: 'pdf' | 'doc' | 'img' | 'folder'",
+        "size": "string",
+        "lastModified": "Date",
+        "path": "string (folder hierarchy)",
+        "category": "string",
+        "access": "UserRole[]"
+      }
+    },
+    "CalendarEvent": {
+      "description": "Unified calendar events",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "start": "Date",
+        "end": "Date",
+        "type": "enum: 'Maintenance' | 'Guest Trip' | 'Crew Schedule' | 'Charter' | 'Dockage' | 'Interior'",
+        "description": "string",
+        "participants": "string[]",
+        "allDay": "boolean"
+      }
+    },
+    "CrewMember": {
+      "description": "Crew marketplace profiles",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "position": "enum: 'Chef' | 'Deckhand' | 'Stewardess' | 'First Mate'",
+        "rate": "number (daily rate)",
+        "rating": "number (1-5)",
+        "bio": "string",
+        "imageUrl": "string",
+        "imageHint": "string",
+        "certifications": "string[]",
+        "availability": "array of {start: Date, end: Date}"
+      }
+    },
+    "GuestPreference": {
+      "description": "Guest preferences and special requirements",
+      "schema": {
+        "id": "string (guest name as document ID)",
+        "dietary": "string",
+        "allergies": "string",
+        "drinks": "string",
+        "notes": "string"
+      }
+    },
+    "VendorJob": {
+      "description": "Job opportunities for vendors",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "vessel": "string",
+        "budget": "number",
+        "deadline": "Date",
+        "status": "enum: 'Open' | 'In Progress' | 'Completed'",
+        "requirements": "string[]",
+        "postedDate": "Date"
+      }
+    },
+    "VendorBid": {
+      "description": "Vendor bids for jobs",
+      "schema": {
+        "id": "string",
+        "jobId": "string",
+        "vendorName": "string",
+        "vendorCompany": "string",
+        "bidAmount": "number",
+        "proposedTimeline": "string",
+        "proposal": "string",
+        "submittedDate": "Date",
+        "status": "enum: 'Submitted' | 'Accepted' | 'Rejected'"
+      }
+    }
+  },
+  "firestore": {
+    "structure": {
+      "/vessels/{vesselId}": {
+        "description": "Top-level vessel documents",
+        "entity": "VesselInfo"
+      },
+      "/vessels/{vesselId}/itinerary": {
+        "description": "Yacht itinerary stops",
+        "entity": "ItineraryStop"
+      },
+      "/vessels/{vesselId}/maintenanceRecords": {
+        "description": "Maintenance and service history",
+        "entity": "MaintenanceRecord"
+      },
+      "/vessels/{vesselId}/expenses": {
+        "description": "Financial expenses and tracking",
+        "entity": "Expense"
+      },
+      "/vessels/{vesselId}/documents": {
+        "description": "Document management",
+        "entity": "DocumentFile"
+      },
+      "/vessels/{vesselId}/calendarEvents": {
+        "description": "Unified calendar events",
+        "entity": "CalendarEvent"
+      },
+      "/vessels/{vesselId}/guestPreferences": {
+        "description": "Guest preferences (document ID is guest name)",
+        "entity": "GuestPreference"
+      },
+      "/vessels/{vesselId}/crewMembers": {
+        "description": "Crew marketplace profiles",
+        "entity": "CrewMember"
+      },
+      "/vessels/{vesselId}/vendorJobs": {
+        "description": "Job opportunities for vendors",
+        "entity": "VendorJob"
+      },
+      "/vessels/{vesselId}/vendorBids": {
+        "description": "Vendor bids for jobs",
+        "entity": "VendorBid"
+      }
+    }
+  },
+  "auth": {
+    "providers": [
+      {
+        "type": "email",
+        "description": "Email/Password authentication"
+      },
+      {
+        "type": "google",
+        "description": "Google OAuth authentication"
+      }
+    ],
+    "userRoles": [
+      "Owner",
+      "Captain",
+      "Crew",
+      "Guest",
+      "Vendor"
+    ]
+  }
+}
