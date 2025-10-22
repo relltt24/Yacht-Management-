@@ -12,6 +12,8 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 const app = express();
+// CORS: Allow all origins for development. In production, restrict to specific domains.
+// Example: app.use(cors({ origin: 'https://yourdomain.com' }));
 app.use(cors({ origin: true }));
 app.use(express.json());
 
