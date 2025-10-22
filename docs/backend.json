@@ -1,0 +1,221 @@
+{
+  "architecture": {
+    "name": "M/Y Azure Dreams - AI-Powered Yacht Management Platform",
+    "version": "1.0.0",
+    "description": "Complete Firebase backend infrastructure for sophisticated yacht management",
+    "framework": "Next.js with Firebase",
+    "database": "Cloud Firestore",
+    "authentication": "Firebase Authentication"
+  },
+  "firestoreStructure": {
+    "topLevelCollection": "vessels",
+    "defaultDocument": "default-vessel",
+    "basePath": "/vessels/default-vessel",
+    "description": "All application data lives under subcollections of /vessels/default-vessel"
+  },
+  "entities": {
+    "UserProfile": {
+      "description": "User account and profile information",
+      "schema": {
+        "id": "string",
+        "email": "string",
+        "displayName": "string",
+        "role": "enum: 'Owner' | 'Captain' | 'Crew' | 'Guest' | 'Vendor'",
+        "photoURL": "string (optional)",
+        "createdAt": "Date",
+        "lastLogin": "Date"
+      }
+    },
+    "ItineraryStop": {
+      "description": "Individual stops in yacht itineraries",
+      "schema": {
+        "id": "string",
+        "location": "string",
+        "arrival": "Date",
+        "departure": "Date",
+        "activities": "string[]",
+        "guests": "string[]",
+        "crew": "string[]",
+        "imageUrl": "string",
+        "imageHint": "string"
+      }
+    },
+    "MaintenanceRecord": {
+      "description": "Maintenance and service records",
+      "schema": {
+        "id": "string",
+        "date": "Date",
+        "service": "string",
+        "vendor": "string",
+        "cost": "number",
+        "status": "enum: 'Completed' | 'In Progress' | 'Scheduled'",
+        "notes": "string",
+        "rating": "number (optional, 1-5)"
+      }
+    },
+    "Expense": {
+      "description": "Financial expenses and wallet transactions",
+      "schema": {
+        "id": "string",
+        "date": "Date",
+        "category": "enum: 'Fuel' | 'Provisioning' | 'Maintenance' | 'Salaries' | 'Other'",
+        "description": "string",
+        "amount": "number",
+        "status": "enum: 'Approved' | 'Pending' | 'Rejected'",
+        "approver": "string (optional)"
+      }
+    },
+    "DocumentFile": {
+      "description": "Document management system files and folders",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "type": "enum: 'pdf' | 'doc' | 'img' | 'folder'",
+        "size": "string",
+        "lastModified": "Date",
+        "path": "string (folder hierarchy)",
+        "category": "string",
+        "access": "UserRole[]"
+      }
+    },
+    "CalendarEvent": {
+      "description": "Unified calendar events across all categories",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "start": "Date",
+        "end": "Date",
+        "type": "enum: 'Maintenance' | 'Guest Trip' | 'Crew Schedule' | 'Charter' | 'Dockage' | 'Interior'",
+        "description": "string",
+        "participants": "string[]",
+        "allDay": "boolean"
+      }
+    },
+    "GuestPreference": {
+      "description": "Guest preference sheets (document ID is guest name)",
+      "schema": {
+        "dietary": "string",
+        "allergies": "string",
+        "drinks": "string",
+        "notes": "string"
+      }
+    },
+    "CrewMember": {
+      "description": "Freelance crew marketplace members",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "position": "enum: 'Chef' | 'Deckhand' | 'Stewardess' | 'First Mate' | 'Captain' | 'Engineer'",
+        "rate": "number (daily rate)",
+        "rating": "number (1-5)",
+        "bio": "string",
+        "imageUrl": "string",
+        "imageHint": "string",
+        "certifications": "string[]",
+        "availability": "array of {start: Date, end: Date}"
+      }
+    },
+    "VendorJob": {
+      "description": "Job postings for vendor marketplace",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "vessel": "string",
+        "budget": "number",
+        "deadline": "Date",
+        "status": "enum: 'Open' | 'In Progress' | 'Completed' | 'Cancelled'",
+        "postedDate": "Date"
+      }
+    },
+    "VendorBid": {
+      "description": "Vendor bids on job postings",
+      "schema": {
+        "id": "string",
+        "jobId": "string",
+        "vendorName": "string",
+        "vendorEmail": "string",
+        "bidAmount": "number",
+        "proposedTimeline": "string",
+        "message": "string",
+        "status": "enum: 'Pending' | 'Accepted' | 'Rejected'",
+        "submittedDate": "Date"
+      }
+    }
+  },
+  "firestore": {
+    "collections": {
+      "/vessels/{vesselId}/itinerary": {
+        "entity": "ItineraryStop",
+        "description": "Trip itineraries and stops",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/maintenanceRecords": {
+        "entity": "MaintenanceRecord",
+        "description": "Maintenance and service history",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/expenses": {
+        "entity": "Expense",
+        "description": "Financial transactions and wallet",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/documents": {
+        "entity": "DocumentFile",
+        "description": "Document storage and management",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/calendarEvents": {
+        "entity": "CalendarEvent",
+        "description": "Unified calendar system",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/guestPreferences": {
+        "entity": "GuestPreference",
+        "description": "Guest preference sheets",
+        "operations": ["read", "write"],
+        "note": "Document ID is the guest's name"
+      },
+      "/vessels/{vesselId}/crewMembers": {
+        "entity": "CrewMember",
+        "description": "Freelance crew marketplace",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/vendorJobs": {
+        "entity": "VendorJob",
+        "description": "Vendor job postings",
+        "operations": ["read", "write"]
+      },
+      "/vessels/{vesselId}/vendorBids": {
+        "entity": "VendorBid",
+        "description": "Vendor bid submissions",
+        "operations": ["read", "write"]
+      }
+    }
+  },
+  "auth": {
+    "providers": [
+      {
+        "type": "email/password",
+        "enabled": true,
+        "description": "Email and password authentication"
+      },
+      {
+        "type": "google",
+        "enabled": true,
+        "description": "Google OAuth authentication"
+      }
+    ],
+    "roles": [
+      "Owner",
+      "Captain",
+      "Crew",
+      "Guest",
+      "Vendor"
+    ]
+  },
+  "securityRules": {
+    "description": "Authenticated users can read and write all vessel data",
+    "implementation": "See firestore.rules file"
+  }
+}
