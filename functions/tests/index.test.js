@@ -75,3 +75,25 @@ describe('Analytics endpoints', () => {
     expect(res.body.data).toHaveProperty('totalYachts');
   });
 });
+
+describe('API prefix compatibility', () => {
+  test('GET /api/yachts works with /api prefix', async () => {
+    const res = await request(app).get('/api/yachts');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('success', true);
+    expect(res.body).toHaveProperty('data');
+  });
+
+  test('GET /api/analytics/dashboard works with /api prefix', async () => {
+    const res = await request(app).get('/api/analytics/dashboard');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('success', true);
+    expect(res.body.data).toHaveProperty('fleet');
+  });
+
+  test('GET /api/healthz works with /api prefix', async () => {
+    const res = await request(app).get('/api/healthz');
+    expect(res.statusCode).toBe(200);
+    expect(res.text).toBe('ok');
+  });
+});

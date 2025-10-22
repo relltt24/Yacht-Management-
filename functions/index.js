@@ -17,8 +17,12 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Export the raw Express app for tests and future extensions
+// Create a router for API endpoints
+const apiRouter = express.Router();
+
+// Export both for tests and future extensions
 module.exports.app = app;
+module.exports.apiRouter = apiRouter;
 
 // In-memory data stores (replace with Firestore in production if needed)
 let yachts = [
@@ -49,11 +53,12 @@ const errorResponse = (res, status, message) => {
   res.status(status).json({ error: message });
 };
 
-// Health check
+// Health check - mount directly on app (accessible at both / and /api/)
 app.get("/healthz", (req, res) => res.send("ok"));
+app.get("/api/healthz", (req, res) => res.send("ok"));
 
 // API root (info)
-app.get("/", (req, res) => {
+apiRouter.get("/", (req, res) => {
   res.json({
     message: "AI Yacht Management Backend API",
     version: "1.0.0",
@@ -69,7 +74,7 @@ app.get("/", (req, res) => {
 });
 
 // Healthcheck endpoint (alternative)
-app.get('/health', (req, res) => {
+apiRouter.get('/health', (req, res) => {
   res.json({
     success: true,
     data: {
@@ -82,7 +87,7 @@ app.get('/health', (req, res) => {
 // ===== YACHT ENDPOINTS =====
 
 // Get all yachts
-app.get("/yachts", (req, res) => {
+apiRouter.get("/yachts", (req, res) => {
   const { status, type } = req.query;
   let filtered = yachts;
   
@@ -97,7 +102,7 @@ app.get("/yachts", (req, res) => {
 });
 
 // Get single yacht
-app.get("/yachts/:id", (req, res) => {
+apiRouter.get("/yachts/:id", (req, res) => {
   const yacht = yachts.find(y => y.id === parseInt(req.params.id));
   if (!yacht) {
     return errorResponse(res, 404, "Yacht not found");
@@ -122,7 +127,7 @@ app.get("/yachts/:id", (req, res) => {
 });
 
 // Create new yacht
-app.post("/yachts", (req, res) => {
+apiRouter.post("/yachts", (req, res) => {
   const { name, type, length, capacity, status } = req.body;
   
   if (!name || !type || !length || !capacity) {
@@ -143,7 +148,7 @@ app.post("/yachts", (req, res) => {
 });
 
 // Update yacht
-app.put("/yachts/:id", (req, res) => {
+apiRouter.put("/yachts/:id", (req, res) => {
   const index = yachts.findIndex(y => y.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Yacht not found");
@@ -154,7 +159,7 @@ app.put("/yachts/:id", (req, res) => {
 });
 
 // Delete yacht
-app.delete("/yachts/:id", (req, res) => {
+apiRouter.delete("/yachts/:id", (req, res) => {
   const index = yachts.findIndex(y => y.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Yacht not found");
@@ -167,7 +172,7 @@ app.delete("/yachts/:id", (req, res) => {
 // ===== CREW ENDPOINTS =====
 
 // Get all crew
-app.get("/crew", (req, res) => {
+apiRouter.get("/crew", (req, res) => {
   const { yachtId, position } = req.query;
   let filtered = crew;
   
@@ -182,7 +187,7 @@ app.get("/crew", (req, res) => {
 });
 
 // Get single crew member
-app.get("/crew/:id", (req, res) => {
+apiRouter.get("/crew/:id", (req, res) => {
   const member = crew.find(c => c.id === parseInt(req.params.id));
   if (!member) {
     return errorResponse(res, 404, "Crew member not found");
@@ -191,7 +196,7 @@ app.get("/crew/:id", (req, res) => {
 });
 
 // Create new crew member
-app.post("/crew", (req, res) => {
+apiRouter.post("/crew", (req, res) => {
   const { name, position, yachtId, certifications } = req.body;
   
   if (!name || !position) {
@@ -211,7 +216,7 @@ app.post("/crew", (req, res) => {
 });
 
 // Update crew member
-app.put("/crew/:id", (req, res) => {
+apiRouter.put("/crew/:id", (req, res) => {
   const index = crew.findIndex(c => c.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Crew member not found");
@@ -222,7 +227,7 @@ app.put("/crew/:id", (req, res) => {
 });
 
 // Delete crew member
-app.delete("/crew/:id", (req, res) => {
+apiRouter.delete("/crew/:id", (req, res) => {
   const index = crew.findIndex(c => c.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Crew member not found");
@@ -235,7 +240,7 @@ app.delete("/crew/:id", (req, res) => {
 // ===== MAINTENANCE ENDPOINTS =====
 
 // Get all maintenance records
-app.get("/maintenance", (req, res) => {
+apiRouter.get("/maintenance", (req, res) => {
   const { yachtId, status } = req.query;
   let filtered = maintenance;
   
@@ -250,7 +255,7 @@ app.get("/maintenance", (req, res) => {
 });
 
 // Get single maintenance record
-app.get("/maintenance/:id", (req, res) => {
+apiRouter.get("/maintenance/:id", (req, res) => {
   const record = maintenance.find(m => m.id === parseInt(req.params.id));
   if (!record) {
     return errorResponse(res, 404, "Maintenance record not found");
@@ -259,7 +264,7 @@ app.get("/maintenance/:id", (req, res) => {
 });
 
 // Create new maintenance record
-app.post("/maintenance", (req, res) => {
+apiRouter.post("/maintenance", (req, res) => {
   const { yachtId, type, scheduledDate, status, notes } = req.body;
   
   if (!yachtId || !type || !scheduledDate) {
@@ -280,7 +285,7 @@ app.post("/maintenance", (req, res) => {
 });
 
 // Update maintenance record
-app.put("/maintenance/:id", (req, res) => {
+apiRouter.put("/maintenance/:id", (req, res) => {
   const index = maintenance.findIndex(m => m.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Maintenance record not found");
@@ -291,7 +296,7 @@ app.put("/maintenance/:id", (req, res) => {
 });
 
 // Delete maintenance record
-app.delete("/maintenance/:id", (req, res) => {
+apiRouter.delete("/maintenance/:id", (req, res) => {
   const index = maintenance.findIndex(m => m.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Maintenance record not found");
@@ -304,7 +309,7 @@ app.delete("/maintenance/:id", (req, res) => {
 // ===== BOOKING ENDPOINTS =====
 
 // Get all bookings
-app.get("/bookings", (req, res) => {
+apiRouter.get("/bookings", (req, res) => {
   const { yachtId, status } = req.query;
   let filtered = bookings;
   
@@ -319,7 +324,7 @@ app.get("/bookings", (req, res) => {
 });
 
 // Get single booking
-app.get("/bookings/:id", (req, res) => {
+apiRouter.get("/bookings/:id", (req, res) => {
   const booking = bookings.find(b => b.id === parseInt(req.params.id));
   if (!booking) {
     return errorResponse(res, 404, "Booking not found");
@@ -328,7 +333,7 @@ app.get("/bookings/:id", (req, res) => {
 });
 
 // Create new booking
-app.post("/bookings", (req, res) => {
+apiRouter.post("/bookings", (req, res) => {
   const { yachtId, clientName, startDate, endDate, status } = req.body;
   
   if (!yachtId || !clientName || !startDate || !endDate) {
@@ -349,7 +354,7 @@ app.post("/bookings", (req, res) => {
 });
 
 // Update booking
-app.put("/bookings/:id", (req, res) => {
+apiRouter.put("/bookings/:id", (req, res) => {
   const index = bookings.findIndex(b => b.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Booking not found");
@@ -360,7 +365,7 @@ app.put("/bookings/:id", (req, res) => {
 });
 
 // Delete booking
-app.delete("/bookings/:id", (req, res) => {
+apiRouter.delete("/bookings/:id", (req, res) => {
   const index = bookings.findIndex(b => b.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Booking not found");
@@ -373,7 +378,7 @@ app.delete("/bookings/:id", (req, res) => {
 // ===== INVENTORY ENDPOINTS =====
 
 // Get all inventory items
-app.get("/inventory", (req, res) => {
+apiRouter.get("/inventory", (req, res) => {
   const { yachtId, category } = req.query;
   let filtered = inventory;
   
@@ -388,7 +393,7 @@ app.get("/inventory", (req, res) => {
 });
 
 // Get single inventory item
-app.get("/inventory/:id", (req, res) => {
+apiRouter.get("/inventory/:id", (req, res) => {
   const item = inventory.find(i => i.id === parseInt(req.params.id));
   if (!item) {
     return errorResponse(res, 404, "Inventory item not found");
@@ -397,7 +402,7 @@ app.get("/inventory/:id", (req, res) => {
 });
 
 // Create new inventory item
-app.post("/inventory", (req, res) => {
+apiRouter.post("/inventory", (req, res) => {
   const { yachtId, item, quantity, category, unit, lastChecked } = req.body;
   
   if (!yachtId || !item || quantity === undefined) {
@@ -419,7 +424,7 @@ app.post("/inventory", (req, res) => {
 });
 
 // Update inventory item
-app.put("/inventory/:id", (req, res) => {
+apiRouter.put("/inventory/:id", (req, res) => {
   const index = inventory.findIndex(i => i.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Inventory item not found");
@@ -430,7 +435,7 @@ app.put("/inventory/:id", (req, res) => {
 });
 
 // Delete inventory item
-app.delete("/inventory/:id", (req, res) => {
+apiRouter.delete("/inventory/:id", (req, res) => {
   const index = inventory.findIndex(i => i.id === parseInt(req.params.id));
   if (index === -1) {
     return errorResponse(res, 404, "Inventory item not found");
@@ -443,7 +448,7 @@ app.delete("/inventory/:id", (req, res) => {
 // ===== AI ANALYTICS ENDPOINTS =====
 
 // Get fleet overview for AI analysis
-app.get("/analytics/fleet-overview", (req, res) => {
+apiRouter.get("/analytics/fleet-overview", (req, res) => {
   const overview = {
     totalYachts: yachts.length,
     yachtsByStatus: yachts.reduce((acc, y) => {
@@ -462,7 +467,7 @@ app.get("/analytics/fleet-overview", (req, res) => {
 });
 
 // Get maintenance insights for AI predictions
-app.get("/analytics/maintenance-insights", (req, res) => {
+apiRouter.get("/analytics/maintenance-insights", (req, res) => {
   const insights = {
     totalMaintenanceRecords: maintenance.length,
     maintenanceByStatus: maintenance.reduce((acc, m) => {
@@ -485,7 +490,7 @@ app.get("/analytics/maintenance-insights", (req, res) => {
 });
 
 // Get booking analytics for revenue optimization
-app.get("/analytics/booking-insights", (req, res) => {
+apiRouter.get("/analytics/booking-insights", (req, res) => {
   const insights = {
     totalBookings: bookings.length,
     bookingsByStatus: bookings.reduce((acc, b) => {
@@ -509,7 +514,7 @@ app.get("/analytics/booking-insights", (req, res) => {
 });
 
 // Get crew utilization for AI staffing optimization
-app.get("/analytics/crew-utilization", (req, res) => {
+apiRouter.get("/analytics/crew-utilization", (req, res) => {
   const utilization = {
     totalCrew: crew.length,
     crewByPosition: crew.reduce((acc, c) => {
@@ -532,7 +537,7 @@ app.get("/analytics/crew-utilization", (req, res) => {
 });
 
 // Get inventory status for AI supply chain optimization
-app.get("/analytics/inventory-status", (req, res) => {
+apiRouter.get("/analytics/inventory-status", (req, res) => {
   const status = {
     totalItems: inventory.length,
     itemsByCategory: inventory.reduce((acc, i) => {
@@ -552,7 +557,7 @@ app.get("/analytics/inventory-status", (req, res) => {
 });
 
 // Comprehensive dashboard data for AI processing
-app.get("/analytics/dashboard", (req, res) => {
+apiRouter.get("/analytics/dashboard", (req, res) => {
   const dashboard = {
     fleet: {
       total: yachts.length,
@@ -582,6 +587,10 @@ app.get("/analytics/dashboard", (req, res) => {
   
   res.json({ success: true, data: dashboard });
 });
+
+// Mount the API router at both root and /api for compatibility
+app.use('/', apiRouter);
+app.use('/api', apiRouter);
 
 // Error handling middleware
 app.use((err, req, res, _next) => {
