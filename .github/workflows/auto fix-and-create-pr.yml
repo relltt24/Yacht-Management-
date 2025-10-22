@@ -5,6 +5,9 @@ on:
 
 permissions:
   contents: write # allows committing and creating PRs inside this repo
+  pull-requests: write
+  issues: write
+  actions: write
 
 jobs:
   autofix:
