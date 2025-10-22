@@ -8,7 +8,12 @@
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
-  "keywords": ["yacht", "management", "express", "firebase"],
+  "keywords": [
+    "yacht",
+    "management",
+    "express",
+    "firebase"
+  ],
   "author": "",
   "license": "ISC",
   "repository": {
@@ -16,6 +21,8 @@
     "url": "https://github.com/relltt24/Yacht-Management-.git"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^8.1.0"
   }
 }
