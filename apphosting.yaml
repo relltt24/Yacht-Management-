@@ -4,3 +4,4 @@ runtime:
 service:
   healthCheck:
     path: /healthz
+

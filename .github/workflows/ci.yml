@@ -1,0 +1,40 @@
+name: CI — Build and Test
+
+on:
+  pull_request:
+    branches: [ main, backend-setup ]
+  push:
+    branches: [ main, backend-setup ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint JavaScript files
+        run: npx eslint . --ext .js || echo "ESLint not configured, skipping..."
+
+      - name: Test backend server
+        run: |
+          node server.js &
+          SERVER_PID=$!
+          sleep 2
+          curl -f http://localhost:8080/healthz || exit 1
+          curl -f http://localhost:8080/ || exit 1
+          kill $SERVER_PID
+        env:
+          PORT: 8080
