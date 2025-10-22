@@ -1,10 +1,19 @@
 {
-  "name": "my-backend",
+  "name": "yacht-management",
   "version": "1.0.0",
+  "description": "Yacht Management System with Express backend and Firebase integration",
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["yacht", "management", "express", "firebase"],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/relltt24/Yacht-Management-.git"
   },
   "dependencies": {
     "express": "^4.19.2"
