@@ -96,7 +96,8 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for complete API reference in
 ## API Endpoints Overview
 
 ### System
-- `GET /` - API information
+- `GET /` - HTML frontend interface
+- `GET /api` - API information (JSON)
 - `GET /healthz` - Health check
 
 ### Management Endpoints
