@@ -1,0 +1,537 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "M/Y Azure Dreams - Firebase Backend Architecture",
+  "description": "Complete Firebase backend infrastructure definition for a sophisticated AI-powered yacht management platform",
+  "version": "1.0.0",
+  "authentication": {
+    "providers": [
+      "google.com",
+      "password"
+    ],
+    "description": "Firebase Authentication with Google and Email/Password sign-in"
+  },
+  "entities": {
+    "UserProfile": {
+      "type": "object",
+      "description": "User profile information for yacht management system users",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the user"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User's email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "Owner",
+            "Captain",
+            "Crew",
+            "Guest",
+            "Vendor",
+            "Admin"
+          ],
+          "description": "User's role in the yacht management system"
+        },
+        "avatarUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to user's avatar image"
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "ItineraryStop": {
+      "type": "object",
+      "description": "A stop in the yacht's trip itinerary",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Name or description of the location"
+        },
+        "arrival": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Arrival date and time at this location"
+        },
+        "departure": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Departure date and time from this location"
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of planned activities at this location"
+        },
+        "guests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of guests for this stop"
+        },
+        "crew": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of crew members assigned to this stop"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to location image"
+        },
+        "imageHint": {
+          "type": "string",
+          "description": "Hint or description for the location image"
+        }
+      },
+      "required": [
+        "location",
+        "arrival",
+        "departure"
+      ],
+      "additionalProperties": false
+    },
+    "MaintenanceRecord": {
+      "type": "object",
+      "description": "Record of maintenance service performed on the yacht",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of the maintenance service"
+        },
+        "service": {
+          "type": "string",
+          "description": "Type or name of the service performed"
+        },
+        "vendor": {
+          "type": "string",
+          "description": "Vendor or service provider name"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Cost of the maintenance service",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Completed",
+            "In Progress",
+            "Scheduled"
+          ],
+          "description": "Current status of the maintenance"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes or details about the service"
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Rating of the service quality (1-5)"
+        }
+      },
+      "required": [
+        "date",
+        "service",
+        "vendor",
+        "cost",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "Expense": {
+      "type": "object",
+      "description": "Financial expense record for the yacht",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of the expense"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Fuel",
+            "Provisioning",
+            "Maintenance",
+            "Salaries",
+            "Other"
+          ],
+          "description": "Category of the expense"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the expense"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the expense",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Approved",
+            "Pending",
+            "Rejected"
+          ],
+          "description": "Approval status of the expense"
+        },
+        "approver": {
+          "type": "string",
+          "description": "Name or ID of the person who approved/will approve the expense"
+        }
+      },
+      "required": [
+        "date",
+        "category",
+        "description",
+        "amount",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "DocumentFile": {
+      "type": "object",
+      "description": "Document or file in the document management system",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the document or file"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "pdf",
+            "doc",
+            "img",
+            "folder"
+          ],
+          "description": "Type of the document"
+        },
+        "size": {
+          "type": "string",
+          "description": "Size of the file (e.g., '2.5 MB')"
+        },
+        "lastModified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modified date and time"
+        },
+        "path": {
+          "type": "string",
+          "description": "Path to the document in storage"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category or folder the document belongs to"
+        },
+        "access": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of user IDs or roles with access to this document"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "path",
+        "access"
+      ],
+      "additionalProperties": false
+    },
+    "CalendarEvent": {
+      "type": "object",
+      "description": "Event in the unified calendar system",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the event"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date and time of the event"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date and time of the event"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Maintenance",
+            "Guest Trip",
+            "Crew Event",
+            "Provisioning",
+            "Other"
+          ],
+          "description": "Type or category of the event"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the event"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of participants (user IDs or names)"
+        },
+        "allDay": {
+          "type": "boolean",
+          "description": "Whether the event is an all-day event"
+        }
+      },
+      "required": [
+        "title",
+        "start",
+        "end",
+        "type",
+        "allDay"
+      ],
+      "additionalProperties": false
+    },
+    "GuestPreference": {
+      "type": "object",
+      "description": "Guest preferences and special requirements (document ID is the guest's name)",
+      "properties": {
+        "dietary": {
+          "type": "string",
+          "description": "Dietary preferences or restrictions"
+        },
+        "allergies": {
+          "type": "string",
+          "description": "Known allergies"
+        },
+        "drinks": {
+          "type": "string",
+          "description": "Preferred drinks or beverages"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes or special requests"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CrewMember": {
+      "type": "object",
+      "description": "Crew member profile in the crew marketplace",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the crew member"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "Chef",
+            "Deckhand",
+            "Engineer",
+            "Steward",
+            "Captain",
+            "First Mate",
+            "Other"
+          ],
+          "description": "Position or role of the crew member"
+        },
+        "rate": {
+          "type": "number",
+          "description": "Hourly or daily rate",
+          "minimum": 0
+        },
+        "rating": {
+          "type": "number",
+          "description": "Overall rating (typically 0-5)",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "bio": {
+          "type": "string",
+          "description": "Biography or description of the crew member"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to crew member's profile image"
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of certifications held by the crew member"
+        },
+        "availability": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start of availability period"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time",
+                "description": "End of availability period"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ]
+          },
+          "description": "Availability windows for the crew member"
+        }
+      },
+      "required": [
+        "name",
+        "position",
+        "rate"
+      ],
+      "additionalProperties": false
+    },
+    "VendorJob": {
+      "type": "object",
+      "description": "Job posting in the vendor marketplace",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the job posting"
+        },
+        "vessel": {
+          "type": "string",
+          "description": "Name or ID of the vessel"
+        },
+        "budget": {
+          "type": "number",
+          "description": "Budget allocated for the job",
+          "minimum": 0
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date",
+          "description": "Deadline for job completion"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the job requirements"
+        }
+      },
+      "required": [
+        "title",
+        "budget",
+        "deadline"
+      ],
+      "additionalProperties": false
+    },
+    "VendorBid": {
+      "type": "object",
+      "description": "Bid submitted by a vendor for a job posting",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "description": "Reference to the job this bid is for"
+        },
+        "vendorId": {
+          "type": "string",
+          "description": "ID of the vendor submitting the bid"
+        },
+        "bidAmount": {
+          "type": "number",
+          "description": "Bid amount in currency",
+          "minimum": 0
+        },
+        "estimatedHours": {
+          "type": "number",
+          "description": "Estimated hours to complete the job",
+          "minimum": 0
+        },
+        "coverLetter": {
+          "type": "string",
+          "description": "Cover letter or proposal from the vendor"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Submitted",
+            "Accepted",
+            "Rejected"
+          ],
+          "description": "Status of the bid"
+        }
+      },
+      "required": [
+        "jobId",
+        "vendorId",
+        "bidAmount"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "firestore": {
+    "description": "Firestore collection structure mapping. All data is nested under /vessels/{vesselId}/ for proper scoping.",
+    "collections": {
+      "/vessels/{vesselId}/itinerary/{itineraryId}": {
+        "schema": "ItineraryStop",
+        "description": "Trip planning and itinerary stops for the vessel"
+      },
+      "/vessels/{vesselId}/maintenanceRecords/{recordId}": {
+        "schema": "MaintenanceRecord",
+        "description": "Service log and maintenance history for the vessel"
+      },
+      "/vessels/{vesselId}/expenses/{expenseId}": {
+        "schema": "Expense",
+        "description": "Financial records and expenses for the vessel"
+      },
+      "/vessels/{vesselId}/documents/{docId}": {
+        "schema": "DocumentFile",
+        "description": "Document management system files and folders"
+      },
+      "/vessels/{vesselId}/calendarEvents/{eventId}": {
+        "schema": "CalendarEvent",
+        "description": "Unified calendar events for the vessel"
+      },
+      "/vessels/{vesselId}/guestPreferences/{guestId}": {
+        "schema": "GuestPreference",
+        "description": "Guest preferences (guestId is typically the guest's name)"
+      },
+      "/vessels/{vesselId}/crewMembers/{crewId}": {
+        "schema": "CrewMember",
+        "description": "Crew marketplace profiles and availability"
+      },
+      "/vessels/{vesselId}/vendorJobs/{jobId}": {
+        "schema": "VendorJob",
+        "description": "Vendor marketplace job postings"
+      },
+      "/vessels/{vesselId}/vendorBids/{bidId}": {
+        "schema": "VendorBid",
+        "description": "Bids submitted for vendor jobs"
+      }
+    }
+  }
+}
