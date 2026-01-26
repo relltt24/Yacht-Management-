@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  /* VesselHaven Brand Colors - Navy to Teal Gradient */
+  --color-navy-50: #e8eef5;
+  --color-navy-100: #d1dde9;
+  --color-navy-200: #a3bbd3;
+  --color-navy-300: #7599bd;
+  --color-navy-400: #4777a7;
+  --color-navy-500: #3d6a96;
+  --color-navy-600: #2d5578;
+  --color-navy-700: #1e405a;
+  --color-navy-800: #162f43;
+  --color-navy-900: #0f1f2d;
+  --color-navy-950: #0a1520;
+
+  /* VesselHaven Teal/Cyan accent */
+  --color-ocean-50: #e6fafa;
+  --color-ocean-100: #ccf5f5;
+  --color-ocean-200: #99ebeb;
+  --color-ocean-300: #66e0e0;
+  --color-ocean-400: #4ecdc4;
+  --color-ocean-500: #3eb8b0;
+  --color-ocean-600: #2ea39c;
+  --color-ocean-700: #1e8e88;
+  --color-ocean-800: #0f7974;
+  --color-ocean-900: #006460;
+  --color-ocean-950: #00403d;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* VesselHaven gradient utilities */
+.vh-gradient {
+  background: linear-gradient(135deg, #2d5578 0%, #4ecdc4 100%);
+}
+
+.vh-gradient-text {
+  background: linear-gradient(135deg, #2d5578 0%, #4ecdc4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
