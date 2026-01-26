@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Store,
   Search,
@@ -21,6 +21,7 @@ import {
   Briefcase,
   Shield,
   TrendingUp,
+  Send,
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import { Card, Button, StatusBadge, Modal, EmptyState } from '../components/common';

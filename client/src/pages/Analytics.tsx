@@ -315,7 +315,7 @@ export default function Analytics() {
                 <XAxis dataKey="month" stroke="#6b7280" />
                 <YAxis stroke="#6b7280" tickFormatter={(value) => `$${value / 1000}k`} />
                 <Tooltip
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
+                  formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
                 />
                 <Area
@@ -343,14 +343,14 @@ export default function Analytics() {
                   outerRadius={100}
                   paddingAngle={5}
                   dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 >
                   {fleetStatusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: number, name: string) => [value, name]}
+                  formatter={(value, name) => [Number(value), String(name)]}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
                 />
                 <Legend />

@@ -241,7 +241,7 @@ export default function Accounting() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                   <XAxis dataKey="month" stroke="#6b7280" />
                   <YAxis stroke="#6b7280" tickFormatter={(v) => `$${v / 1000}k`} />
-                  <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                  <Tooltip formatter={(value) => `$${Number(value).toLocaleString()}`} />
                   <Legend />
                   <Area type="monotone" dataKey="income" stroke="#10b981" fill="url(#incomeGradient)" name="Income" />
                   <Area type="monotone" dataKey="expenses" stroke="#ef4444" fill="url(#expenseGradient)" name="Expenses" />
@@ -262,14 +262,14 @@ export default function Accounting() {
                     outerRadius={100}
                     paddingAngle={5}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >
                     {expensesByCategory.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                  <Tooltip formatter={(value) => `$${Number(value).toLocaleString()}`} />
                 </RechartsPie>
               </ResponsiveContainer>
             </Card>
