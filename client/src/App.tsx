@@ -17,6 +17,10 @@ import {
   Voyages,
   Services,
   Dockage,
+  Wallet,
+  VendorCatalog,
+  Bids,
+  Accounting,
 } from './pages';
 
 // Protected Route Component
@@ -108,6 +112,23 @@ function AppRoutes() {
 
         {/* Analytics */}
         <Route path="analytics" element={<Analytics />} />
+
+        {/* Wallet & Payments */}
+        <Route path="wallet" element={<Wallet />} />
+        <Route path="wallet/transactions" element={<Wallet />} />
+        <Route path="wallet/payees" element={<Wallet />} />
+
+        {/* Vendor Catalog */}
+        <Route path="vendors" element={<VendorCatalog />} />
+        <Route path="vendors/:id" element={<VendorCatalog />} />
+
+        {/* Bids */}
+        <Route path="bids" element={<Bids />} />
+        <Route path="bids/:id" element={<Bids />} />
+
+        {/* Accounting */}
+        <Route path="accounting" element={<Accounting />} />
+        <Route path="accounting/:yachtId" element={<Accounting />} />
 
         {/* Settings */}
         <Route path="settings" element={<Settings />} />

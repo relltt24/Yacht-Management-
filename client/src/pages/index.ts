@@ -11,3 +11,7 @@ export { default as Login } from './Login';
 export { default as Voyages } from './Voyages';
 export { default as Services } from './Services';
 export { default as Dockage } from './Dockage';
+export { default as Wallet } from './Wallet';
+export { default as VendorCatalog } from './VendorCatalog';
+export { default as Bids } from './Bids';
+export { default as Accounting } from './Accounting';

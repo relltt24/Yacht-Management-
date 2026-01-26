@@ -14,6 +14,10 @@ import {
   Anchor as AnchorIcon,
   Sparkles,
   MapPin,
+  Wallet,
+  Store,
+  Gavel,
+  Calculator,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -25,6 +29,10 @@ const navigation = [
   { name: 'Bookings', href: '/bookings', icon: Calendar },
   { name: 'Dockage', href: '/dockage', icon: AnchorIcon },
   { name: 'Services', href: '/services', icon: Wrench },
+  { name: 'Vendors', href: '/vendors', icon: Store },
+  { name: 'Bids', href: '/bids', icon: Gavel },
+  { name: 'Wallet', href: '/wallet', icon: Wallet },
+  { name: 'Accounting', href: '/accounting', icon: Calculator },
   { name: 'Inventory', href: '/inventory', icon: Package },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
 ];
